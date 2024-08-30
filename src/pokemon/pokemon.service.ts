@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pokemon } from './pokemon.entity';
@@ -16,7 +16,6 @@ export class PokemonService {
 
     // async create() {
     //     const pokemons = pokemonData.pokemon;
-
     //     for (const data of pokemons) {
     //         const pokemon = new Pokemon();
     //         Object.assign(pokemon, {
@@ -33,21 +32,23 @@ export class PokemonService {
     //     }
     // }
 
-
     async create(pokemonData: Pokemon) {
-        const pokemon = new Pokemon();
-
-        Object.assign(pokemon, {
-            id_pokemon: pokemonData.id,
-            name: pokemonData.name,
-            hp: pokemonData.hp,
-            attack: pokemonData.attack,
-            defense: pokemonData.defense,
-            speed: pokemonData.speed,
-            type: pokemonData.type,
-            imageUrl: pokemonData.imageUrl,
-        });
-        return await this.pokemonRepository.save(pokemon);
+        try {
+            const pokemon = new Pokemon();
+            Object.assign(pokemon, {
+                id_pokemon: pokemonData.id,
+                name: pokemonData.name,
+                hp: pokemonData.hp,
+                attack: pokemonData.attack,
+                defense: pokemonData.defense,
+                speed: pokemonData.speed,
+                type: pokemonData.type,
+                imageUrl: pokemonData.imageUrl,
+            });
+            return await this.pokemonRepository.save(pokemon);
+        } catch (error) {
+            throw new InternalServerErrorException();
+        }
     }
 
     async batalla(id_pokemon1: string, id_pokemon2: string) {
@@ -55,7 +56,7 @@ export class PokemonService {
         const pokemon2 = await this.pokemonRepository.findOneBy({ id_pokemon: id_pokemon2 });
 
         if (!pokemon1 || !pokemon2) {
-            throw new NotFoundException('Pokémon no encontrado');
+            throw new NotFoundException();
         }
 
         let attacker = pokemon1.speed >= pokemon2.speed ? pokemon1 : pokemon2;
@@ -84,6 +85,10 @@ export class PokemonService {
     }
 
     async findAll() {
-        return this.pokemonRepository.find();
+        try {
+            return await this.pokemonRepository.find();
+        } catch (error) {
+            throw new InternalServerErrorException();
+        }
     }
 }
