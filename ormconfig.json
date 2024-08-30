@@ -1,0 +1,16 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "319097351",
+    "database": "pokemon",
+    "synchronize": false,
+    "logging": false,
+    "entities": ["src/pokemon/**/*.ts"],
+    "migrations": ["src/migration/**/*.ts"],
+    "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration"
+    }
+  }

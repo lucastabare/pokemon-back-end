@@ -1,0 +1,12 @@
+{
+    "watch": [
+        "src"
+    ],
+    "ignore": [
+        "src/**/*.spec.ts",
+        "dist",
+        "node_modules",
+        "logs"
+    ],
+    "exec": "nest start --watch"
+}
